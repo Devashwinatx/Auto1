@@ -214,14 +214,14 @@ async def auto_rename_files(client, message):
             del renaming_operations[file_id]
             return await download_msg.edit(e)  
 
-        _bool_metadata = await AshutoshGoswami24.get_metadata(message.chat.id)  
+        _bool_metadata = await AshutoshGoswami24.get_metadata(update.message.chat.id)  
     
         if (_bool_metadata):
-            metadata_path = f"Metadata/{new_file_name}"
-            metadata = await AshutoshGoswami24.get_metadata_code(message.chat.id)
+            metadata_path = f"Metadata/{new_filename}"
+            metadata = await AshutoshGoswami24.get_metadata_code(update.message.chat.id)
             if metadata:
 
-                await download_msg.edit("I Found Your Metadata🔥\n\n__Please Wait...__\n`Adding Metadata ⚡...`")
+                await ms.edit("I Found Your Metadata🔥\n\n__Please Wait...__\n`Adding Metadata ⚡...`")
                 cmd = f"""ffmpeg -y -i "{path}" {metadata} "{metadata_path}" """
 
                 process = await asyncio.create_subprocess_shell(
@@ -233,23 +233,25 @@ async def auto_rename_files(client, message):
 
                 try:
                     if er:
-                        return await download_msg.edit(str(er) + "\n\n**Error**")
+                        return await ms.edit(str(er) + "\n\n**Error**")
                 except BaseException:
                     pass
-            await download_msg.edit("**Metadata Added To The File Successfully ✅**\n\n__**Please Wait...**__\n\n`😈Trying To Downloading`")
+            await ms.edit("**Metadata Added To The File Successfully ✅**\n\n__**Please Wait...**__\n\n`😈Trying To Downloading`")
         else:
-            await download_msg.edit("`😈Trying To Downloading`") 
-
+            await ms.edit("`😈Trying To Downloading`") 
         duration = 0
         try:
-            metadata = extractMetadata(createParser(file_path))
+            parser = createParser(file_path)
+            metadata = extractMetadata(parser)
             if metadata.has("duration"):
-                duration = metadata.get('duration').seconds
-        except Exception as e:
-            print(f"Error getting duration: {e}")
+               duration = metadata.get('duration').seconds
+            parser.close()   
+        except:
+            pass
             
-        upload_msg = await download_msg.edit("Trying To Uploading⚡.....")
+        
         ph_path = None 
+        user_id = int(update.message.chat.id) 
         c_caption = await AshutoshGoswami24.get_caption(message.chat.id)
         c_thumb = await AshutoshGoswami24.get_thumbnail(message.chat.id)
 
@@ -267,7 +269,7 @@ async def auto_rename_files(client, message):
             img.resize((320, 320))
             img.save(ph_path, "JPEG")    
 
-        
+        upload_msg = await download_msg.edit("Trying To Uploading⚡.....")
         try:
             type = media_type  # Use 'media_type' variable instead
             if type == "document":
