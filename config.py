@@ -13,11 +13,11 @@ class Config(object):
  
     # other configs
     BOT_UPTIME  = time.time()
-    START_PIC   = os.environ.get("START_PIC", "")
+    START_PIC   = os.environ.get("START_PIC", "https://telegra.ph/file/feb6dd0a1cb8576943c0f.jpg")
     ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6299192020').split()]
     # -- FORCE_SUB_CHANNELS = ["BotzPW","AshuSupport","AshutoshGoswami24"] -- # 
-    FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', 'Anime_warrior_tamil').split(',')
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))
+    FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', '+YcF3Igdh_ioxZjY1').split(',')
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002040299414"))
     PORT = int(os.environ.get("PORT", "8030"))
     
     # wes response configuration     
