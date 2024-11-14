@@ -222,7 +222,8 @@ async def auto_rename_files(client, message):
             if metadata:
 
                 await download_msg.edit("I Found Your Metadata🔥\n\n__Please Wait...__\n`Adding Metadata ⚡...`")
-                cmd = f"""ffmpeg -y -i "{path}" -c:a copy {metadata} "{metadata_path}" """
+                cmd = f"""ffmpeg -y -i "{path}" {metadata} -c:a copy "{metadata_path}" """
+
 
                 process = await asyncio.create_subprocess_shell(
                     cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -239,19 +240,18 @@ async def auto_rename_files(client, message):
             await download_msg.edit("**Metadata Added To The File Successfully ✅**\n\n__**Please Wait...**__\n\n`😈Trying To Downloading`")
         else:
             await download_msg.edit("`😈Trying To Downloading`") 
+        
         duration = 0
         try:
-            parser = createParser(file_path)
-            metadata = extractMetadata(parser)
+            metadata = extractMetadata(createParser(file_path))
             if metadata.has("duration"):
-               duration = metadata.get('duration').seconds
-            parser.close()   
-        except:
-            pass
+                duration = metadata.get('duration').seconds
+        except Exception as e:
+            print(f"Error getting duration: {e}")
+
+        upload_msg = await download_msg.edit("Trying To Uploading.....")
             
-        
         ph_path = None 
-        user_id = int(message.chat.id) 
         c_caption = await AshutoshGoswami24.get_caption(message.chat.id)
         c_thumb = await AshutoshGoswami24.get_thumbnail(message.chat.id)
 
@@ -269,7 +269,6 @@ async def auto_rename_files(client, message):
             img.resize((320, 320))
             img.save(ph_path, "JPEG")    
 
-        upload_msg = await download_msg.edit("Trying To Uploading⚡.....")
         try:
             type = media_type  # Use 'media_type' variable instead
             if type == "document":
